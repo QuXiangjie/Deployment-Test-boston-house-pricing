@@ -1,9 +1,12 @@
-Flask
-sklearn
+fastapi
+uvicorn[standard]
+scikit-learn
 pandas
 numpy
 matplotlib
 gunicorn
-airflow
+apache-airflow
 requests
+python-multipart
+pydantic
 

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>California Housing Price Prediction - API Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #3498db;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        input[type="number"], input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .example-data {
+            background-color: #e8f4fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .loading {
+            display: none;
+            color: #3498db;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>    <h1>California Housing Price Prediction API Test</h1>
+    
+    <!-- API Status Check -->
+    <div class="container">
+        <h2>API Status Check</h2>
+        <button onclick="checkAPIStatus()">Check API Health</button>
+        <div id="statusResult" class="result" style="display: none;"></div>
+    </div>
+
+    <!-- JSON Prediction Test -->
+    <div class="container">
+        <h2>JSON Prediction Test</h2>
+        <p>Enter the 8 California Housing features:</p>
+        
+        <div class="feature-grid">
+            <div class="form-group">
+                <label for="medInc">Median Income (MedInc)</label>
+                <input type="number" id="medInc" step="0.0001" value="3.5673" placeholder="e.g., 3.5673">
+            </div>
+            <div class="form-group">
+                <label for="houseAge">House Age (HouseAge)</label>
+                <input type="number" id="houseAge" step="1" value="11" placeholder="e.g., 11">
+            </div>
+            <div class="form-group">
+                <label for="aveRooms">Average Rooms (AveRooms)</label>
+                <input type="number" id="aveRooms" step="0.0001" value="5.93" placeholder="e.g., 5.93">
+            </div>
+            <div class="form-group">
+                <label for="aveBedrms">Average Bedrooms (AveBedrms)</label>
+                <input type="number" id="aveBedrms" step="0.0001" value="1.13" placeholder="e.g., 1.13">
+            </div>
+            <div class="form-group">
+                <label for="population">Population</label>
+                <input type="number" id="population" step="1" value="1257" placeholder="e.g., 1257">
+            </div>
+            <div class="form-group">
+                <label for="aveOccup">Average Occupancy (AveOccup)</label>
+                <input type="number" id="aveOccup" step="0.0001" value="2.82" placeholder="e.g., 2.82">
+            </div>
+            <div class="form-group">
+                <label for="latitude">Latitude</label>
+                <input type="number" id="latitude" step="0.0001" value="39.29" placeholder="e.g., 39.29">
+            </div>
+            <div class="form-group">
+                <label for="longitude">Longitude</label>
+                <input type="number" id="longitude" step="0.0001" value="-121.32" placeholder="e.g., -121.32">
+            </div>
+        </div>
+
+        <div class="example-data">
+            <strong>Example Data:</strong> The default values above represent a typical California housing record.
+        </div>        <button onclick="predictJSON()">Predict Price</button>
+        <button onclick="loadExampleData()">Load Example Data</button>
+        <button onclick="clearForm()">Clear Form</button>
+        
+        <div id="jsonLoading" class="loading">Making prediction...</div>
+        <div id="jsonResult" class="result" style="display: none;"></div>
+    </div>    <!-- CSV Upload Test -->
+    <div class="container">
+        <h2>CSV Upload Test</h2>
+        <p>Upload a CSV file with columns: MedInc, HouseAge, AveRooms, AveBedrms, Population, AveOccup, Latitude, Longitude</p>
+        
+        <div class="form-group">
+            <label for="csvFile">Select CSV File:</label>
+            <input type="file" id="csvFile" accept=".csv">
+        </div>
+        
+        <div class="example-data">
+            <strong>CSV Format Example:</strong><br>
+            <code>MedInc,HouseAge,AveRooms,AveBedrms,Population,AveOccup,Latitude,Longitude<br>
+            3.5673,11.0,5.93,1.13,1257.0,2.82,39.29,-121.32<br>
+            4.6225,13.0,6.12,1.04,2828.0,2.54,38.54,-121.7</code>
+        </div>        <button onclick="predictCSV()">Upload & Predict</button>
+        <button onclick="downloadSampleCSV()">Download Sample CSV</button>
+        
+        <div id="csvLoading" class="loading">Processing CSV...</div>
+        <div id="csvResult" class="result" style="display: none;"></div>
+    </div>    <!-- API Configuration -->
+    <div class="container">
+        <h2>API Configuration</h2>
+        <div class="form-group">
+            <label for="apiUrl">API Base URL:</label>
+            <input type="text" id="apiUrl" value="http://localhost:8000" placeholder="http://localhost:8000">
+        </div>
+        <p><em>Change this if your API is running on a different host/port</em></p>
+    </div>
+
+    <script>
+        const getApiUrl = () => document.getElementById('apiUrl').value;
+
+        async function checkAPIStatus() {
+            const resultDiv = document.getElementById('statusResult');
+            resultDiv.style.display = 'block';
+            resultDiv.textContent = 'Checking API status...';
+            resultDiv.className = 'result';
+
+            try {
+                const response = await fetch(`${getApiUrl()}/health`);
+                const data = await response.json();
+                  if (response.ok) {
+                    resultDiv.textContent = `API is healthy!\n\n${JSON.stringify(data, null, 2)}`;
+                    resultDiv.className = 'result success';
+                } else {
+                    resultDiv.textContent = `API returned error: ${response.status}\n\n${JSON.stringify(data, null, 2)}`;
+                    resultDiv.className = 'result error';
+                }
+            } catch (error) {
+                resultDiv.textContent = `Failed to connect to API: ${error.message}\n\nMake sure the API is running at: ${getApiUrl()}`;
+                resultDiv.className = 'result error';
+            }
+        }
+
+        async function predictJSON() {
+            const resultDiv = document.getElementById('jsonResult');
+            const loadingDiv = document.getElementById('jsonLoading');
+            
+            // Get form values
+            const data = [[
+                parseFloat(document.getElementById('medInc').value),
+                parseFloat(document.getElementById('houseAge').value),
+                parseFloat(document.getElementById('aveRooms').value),
+                parseFloat(document.getElementById('aveBedrms').value),
+                parseFloat(document.getElementById('population').value),
+                parseFloat(document.getElementById('aveOccup').value),
+                parseFloat(document.getElementById('latitude').value),
+                parseFloat(document.getElementById('longitude').value)
+            ]];            // Validate inputs
+            if (data[0].some(val => isNaN(val))) {
+                resultDiv.style.display = 'block';
+                resultDiv.textContent = 'Please fill in all fields with valid numbers';
+                resultDiv.className = 'result error';
+                return;
+            }
+
+            loadingDiv.style.display = 'block';
+            resultDiv.style.display = 'none';
+
+            try {
+                const response = await fetch(`${getApiUrl()}/predict`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ data })
+                });
+
+                const result = await response.json();
+                loadingDiv.style.display = 'none';
+                resultDiv.style.display = 'block';                if (response.ok) {
+                    const prediction = result.prediction[0];
+                    resultDiv.textContent = `Prediction Successful!\n\nPredicted House Value: $${(prediction * 100000).toLocaleString()}\n(${prediction.toFixed(4)} in hundreds of thousands)\n\nFull Response:\n${JSON.stringify(result, null, 2)}`;
+                    resultDiv.className = 'result success';
+                } else {
+                    resultDiv.textContent = `Prediction failed: ${response.status}\n\n${JSON.stringify(result, null, 2)}`;
+                    resultDiv.className = 'result error';
+                }
+            } catch (error) {
+                loadingDiv.style.display = 'none';
+                resultDiv.style.display = 'block';
+                resultDiv.textContent = `Network error: ${error.message}`;
+                resultDiv.className = 'result error';
+            }
+        }
+
+        async function predictCSV() {
+            const fileInput = document.getElementById('csvFile');
+            const resultDiv = document.getElementById('csvResult');
+            const loadingDiv = document.getElementById('csvLoading');            if (!fileInput.files[0]) {
+                resultDiv.style.display = 'block';
+                resultDiv.textContent = 'Please select a CSV file';
+                resultDiv.className = 'result error';
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            loadingDiv.style.display = 'block';
+            resultDiv.style.display = 'none';
+
+            try {
+                const response = await fetch(`${getApiUrl()}/predict_csv`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                loadingDiv.style.display = 'none';
+                resultDiv.style.display = 'block';                if (response.ok) {
+                    const predictions = result.prediction.map(p => `$${(p * 100000).toLocaleString()}`).join(', ');
+                    resultDiv.textContent = `CSV Prediction Successful!\n\nPredicted Values: ${predictions}\n\nFull Response:\n${JSON.stringify(result, null, 2)}`;
+                    resultDiv.className = 'result success';
+                } else {
+                    resultDiv.textContent = `CSV prediction failed: ${response.status}\n\n${JSON.stringify(result, null, 2)}`;
+                    resultDiv.className = 'result error';
+                }
+            } catch (error) {
+                loadingDiv.style.display = 'none';
+                resultDiv.style.display = 'block';
+                resultDiv.textContent = `Network error: ${error.message}`;
+                resultDiv.className = 'result error';
+            }
+        }
+
+        function loadExampleData() {
+            document.getElementById('medInc').value = '4.6225';
+            document.getElementById('houseAge').value = '13';
+            document.getElementById('aveRooms').value = '6.12';
+            document.getElementById('aveBedrms').value = '1.04';
+            document.getElementById('population').value = '2828';
+            document.getElementById('aveOccup').value = '2.54';
+            document.getElementById('latitude').value = '38.54';
+            document.getElementById('longitude').value = '-121.7';
+        }
+
+        function clearForm() {
+            document.getElementById('medInc').value = '';
+            document.getElementById('houseAge').value = '';
+            document.getElementById('aveRooms').value = '';
+            document.getElementById('aveBedrms').value = '';
+            document.getElementById('population').value = '';
+            document.getElementById('aveOccup').value = '';
+            document.getElementById('latitude').value = '';
+            document.getElementById('longitude').value = '';
+        }
+
+        function downloadSampleCSV() {
+            const csvContent = `MedInc,HouseAge,AveRooms,AveBedrms,Population,AveOccup,Latitude,Longitude
+3.5673,11.0,5.93,1.13,1257.0,2.82,39.29,-121.32
+4.6225,13.0,6.12,1.04,2828.0,2.54,38.54,-121.7
+2.5495,27.0,5.45,1.08,1082.0,2.83,39.19,-121.53`;
+            
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'sample_housing_data.csv';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        // Auto-check API status on page load
+        window.onload = function() {
+            checkAPIStatus();
+        };
+    </script>
+</body>
+</html>

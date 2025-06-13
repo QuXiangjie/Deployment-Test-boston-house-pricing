@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>ML API</title>
+  <title>California Housing Price Prediction API</title>
   <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
 <link href='https://fonts.googleapis.com/css?family=Arimo' rel='stylesheet' type='text/css'>
 <link href='https://fonts.googleapis.com/css?family=Hind:300' rel='stylesheet' type='text/css'>
@@ -14,35 +14,40 @@
 
 <body>
  <div class="login">
-	<h1>Boston House Price Prediction</h1>
+	<h1>California Housing Price Prediction</h1>
+    <p>This API uses the California Housing dataset. Use the FastAPI endpoints:</p>
+    <ul>
+        <li><strong>GET /</strong> - Health check</li>
+        <li><strong>POST /predict</strong> - Predict with JSON data</li>
+        <li><strong>POST /predict_csv</strong> - Predict with CSV file upload</li>
+    </ul>
+    
+    <h3>Expected Features (in order):</h3>
+    <ol>
+        <li>MedInc - Median income in block group</li>
+        <li>HouseAge - Median house age in block group</li>
+        <li>AveRooms - Average number of rooms per household</li>
+        <li>AveBedrms - Average number of bedrooms per household</li>
+        <li>Population - Block group population</li>
+        <li>AveOccup - Average number of household members</li>
+        <li>Latitude - Block group latitude</li>
+        <li>Longitude - Block group longitude</li>
+    </ol>
+    
+    <h3>Example JSON Request:</h3>
+    <pre>
+{
+  "data": [
+    [3.5673, 11.0, 5.93, 1.13, 1257.0, 2.82, 39.29, -121.32]
+  ]
+}
+    </pre>
 
-     <!-- Main Input For Receiving Query to our ML -->
-    <form action="{{ url_for('predict')}}"method="post">
-      <input type="text" name="CRIM" placeholder="CRIM" required="required" /><br>
-    	<input type="text" name="ZN" placeholder="ZN" required="required" /><br>
-        <input type="text" name="INDUS" placeholder="INDUS" required="required" /><br>
-        <input type="text" name="CHAS" placeholder="CHAS" required="required" /><br>
-        <input type="text" name="NOX" placeholder="NOX" required="required" /><br>
-        <input type="text" name="RM" placeholder="RM" required="required" /><br>
-        <input type="text" name="Age" placeholder="Age" required="required" /><br>
-        <input type="text" name="DIS" placeholder="DIS" required="required" /><br>
-        <input type="text" name="RAD" placeholder="RAD" required="required" /><br>
-        <input type="text" name="TAX" placeholder="TAX" required="required" /><br>
-        <input type="text" name="PTRATIO" placeholder="PTRATIO" required="required" /><br>
-        <input type="text" name="B" placeholder="B" required="required" /><br>
-        <input type="text" name="LSTAT" placeholder="LSTAT" required="required" /><br>
+     <!-- Note: This HTML template is for documentation only -->
+     <!-- The actual API endpoints are served by FastAPI -->
 
-       
-
-        <button type="submit" class="btn btn-primary btn-block btn-large">Predict</button>
-    </form>
-
-   <br>
-   <br>
-  
    
  </div>
- {{prediction_text}}
 
 </body>
 </html>

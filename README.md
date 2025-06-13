@@ -3,6 +3,17 @@
 ## Overview
 This project demonstrates how to deploy a machine learning model for California housing price prediction and make it accessible for use in PowerBI and other applications. The deployment pipeline includes model serialization, automated retraining, API serving, and containerization.
 
+## Dataset Information
+This project uses the California Housing dataset with 8 features:
+- **MedInc**: Median income in block group
+- **HouseAge**: Median house age in block group  
+- **AveRooms**: Average number of rooms per household
+- **AveBedrms**: Average number of bedrooms per household
+- **Population**: Block group population
+- **AveOccup**: Average number of household members
+- **Latitude**: Block group latitude
+- **Longitude**: Block group longitude
+
 ## Software and Tools Requirements
 
 ### 1. Model Serialization (Pickle)
